@@ -1,0 +1,25 @@
+FROM ubuntu:16.04
+
+WORKDIR /mydir
+RUN apt-get update && apt-get install -y curl git 
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN apt-get install -y nodejs
+
+RUN git clone https://github.com/docker-hy/frontend-example-docker.git
+
+RUN cd  frontend-example-docker && npm install
+
+RUN npm install -g serve
+
+WORKDIR frontend-example-docker 
+
+RUN node_modules/.bin/webpack --mode production
+
+CMD ["/usr/bin/serve", "-s", "-l","5000","dist"]
+
+
+# Commands used
+
+# docker build -t frontend .
+# docker run -it -p 3000:5000 frontend
